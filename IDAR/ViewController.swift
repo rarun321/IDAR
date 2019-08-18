@@ -58,69 +58,20 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         print("image found")
         
-        let planeNode = PlaneNode(color: UIColor.red, position: SCNVector3(0,0,0))
-        let planeNode2 = PlaneNode(color: UIColor.blue, position: SCNVector3(0,0,0))
-        let planeNode3 = PlaneNode(color: UIColor.green, position: SCNVector3(0,0,0))
-        let planeNode4 = PlaneNode(color: UIColor.yellow, position: SCNVector3(0,0,0))
-        let planeNode5 = PlaneNode(color: UIColor.orange, position: SCNVector3(0,0,0))
-        let planeNode6 = PlaneNode(color: UIColor.black, position: SCNVector3(0,0,0))
         guard let container = sceneView.scene.rootNode.childNode(withName: "container", recursively: false) else{return}
         container.removeFromParentNode()
-        container.addChildNode(planeNode.CreatePlaneNode())
-        container.addChildNode(planeNode2.CreatePlaneNode())
-        container.addChildNode(planeNode3.CreatePlaneNode())
-        container.addChildNode(planeNode4.CreatePlaneNode())
-        container.addChildNode(planeNode5.CreatePlaneNode())
-        container.addChildNode(planeNode6.CreatePlaneNode())
+        
+        let colorArray = [UIColor.blue, UIColor.red, UIColor.orange, UIColor.yellow, UIColor.green, UIColor.gray, UIColor.lightGray, UIColor.white, UIColor.magenta, UIColor.cyan, UIColor.brown]
+        
+        for course in courses{
+            let plane = PlaneNode(color: colorArray.randomElement()!, position: SCNVector3(0,0,0))
+            let planeNode = plane.CreatePlaneNode()
+            planeNode.addChildNode(TextNode(text: course.name!, position: SCNVector3(0.35,1.7,0) , font: UIFont.init(name: "Futura", size: 14)!).CreatetextNode())
+            container.addChildNode(planeNode)
+        }
         
         RunPostitoningAlgorithmForPlanes(array: container.childNodes)
-       
-        
         node.addChildNode(container)
-        
-        
-//        var childCourseNodes = [SCNNode]()
-//        var childGradeNodes = [SCNNode]()
-//        
-//        for child in container.childNodes {
-//            if child.name == "subject1" || child.name == "subject2" || child.name == "subject3" || child.name == "subject4"{
-//                childCourseNodes.append(child)
-//            }
-//        }
-//        
-//        for child in container.childNodes{
-//            if child.name == "subject1Grade" || child.name == "subject2Grade" || child.name == "subject3Grade" || child.name == "subject4Grade" {
-//                childGradeNodes.append(child)
-//            }
-//        }
-//        
-//        var countGrade = 0;
-//
-//
-//
-//       
-       
-        
-        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0){
-//            let snapShot = self.CropSnapShot()
-//            let extraction = TextExtract(image: snapShot)
-//
-//
-//            guard let container = self.sceneView.scene.rootNode.childNode(withName: "container", recursively: false) else {return}
-//            guard let nameNode = container.childNode(withName: "name", recursively: false) else {return}
-//            guard let studentIdNode = container.childNode(withName: "studentId", recursively: false) else {return}
-//            guard let pitchFork = container.childNode(withName: "pitchFork", recursively: false) else {return}
-//            guard let typeNode = container.childNode(withName: "type", recursively: false) else {return}
-//            self.AddAction(node: pitchFork)
-//
-//            container.addChildNode(self.ChangeNodeText(node: nameNode, text: extraction.studentName))
-//            container.addChildNode(self.ChangeNodeText(node: studentIdNode, text: extraction.studentId))
-//            container.addChildNode(self.ChangeNodeText(node: typeNode, text: extraction.type))
-//
-//            node.addChildNode(container)
-//            container.isHidden = false
-
     }
     
     // Positions planes 2x2 grid
