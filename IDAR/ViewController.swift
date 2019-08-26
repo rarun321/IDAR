@@ -67,6 +67,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             let plane = PlaneNode(color: colorArray.randomElement()!, position: SCNVector3(0,0,0))
             let planeNode = plane.CreatePlaneNode()
             planeNode.addChildNode(TextNode(text: course.name!, position: SCNVector3(0.35,1.7,0) , font: UIFont.init(name: "Futura", size: 14)!).CreatetextNode())
+            planeNode.addChildNode(TextNode(text: course.enrollments![0].computed_current_grade!, position: SCNVector3(<#T##x: CGFloat##CGFloat#>, <#T##y: CGFloat##CGFloat#>, <#T##z: CGFloat##CGFloat#>), font: <#T##UIFont#>))
             container.addChildNode(planeNode)
         }
         
@@ -142,7 +143,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             guard let dataFromAPI = data else {return}
             if error == nil{
               guard let resp = try? JSONDecoder().decode([Element].self, from: dataFromAPI) else{return}
-              self.courses = resp
+                for var course in resp {
+                    if course.name?.contains("(2019 Fall)") == true {
+                       guard let formattedName = course.name?.components(separatedBy: ":") else {return}
+                        course.name = formattedName[0]
+                        self.courses.append(course)
+                    }
+                }
             }
             else{
                 print("ERROR")

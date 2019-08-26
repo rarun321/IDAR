@@ -10,7 +10,7 @@ import Foundation
 
 struct Element: Decodable {
     let id: Int?
-    let name: String?
+    var name: String?
     let accountID: Int?
     let uuid: String?
     let startAt: Date?
