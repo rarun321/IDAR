@@ -67,7 +67,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             let plane = PlaneNode(color: colorArray.randomElement()!, position: SCNVector3(0,0,0))
             let planeNode = plane.CreatePlaneNode()
             planeNode.addChildNode(TextNode(text: course.name!, position: SCNVector3(0.35,1.7,0) , font: UIFont.init(name: "Futura", size: 14)!).CreatetextNode())
-            planeNode.addChildNode(TextNode(text: course.enrollments![0].computed_current_grade!, position: SCNVector3(<#T##x: CGFloat##CGFloat#>, <#T##y: CGFloat##CGFloat#>, <#T##z: CGFloat##CGFloat#>), font: <#T##UIFont#>))
+//            planeNode.addChildNode(TextNode(text: course.enrollments![0].computed_current_grade!, position: SCNVector3(<#T##x: CGFloat##CGFloat#>, <#T##y: CGFloat##CGFloat#>, <#T##z: CGFloat##CGFloat#>), font: <#T##UIFont#>))
             container.addChildNode(planeNode)
         }
         
