@@ -18,8 +18,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     var courses = [Element]()
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Set the view's delegate
@@ -39,6 +37,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         //self.AddCGRectangle()
     }
     
+    //Sets configuartion for tracking
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -55,23 +54,31 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.session.pause()
     }
     
+    //Renders the augmented platform
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         print("image found")
         
         guard let container = sceneView.scene.rootNode.childNode(withName: "container", recursively: false) else{return}
         container.removeFromParentNode()
         
-        let colorArray = [UIColor.blue, UIColor.red, UIColor.orange, UIColor.yellow, UIColor.green, UIColor.gray, UIColor.lightGray, UIColor.white, UIColor.magenta, UIColor.cyan, UIColor.brown]
+        let colorArray = [UIColor.blue, UIColor.red, UIColor.orange, UIColor.green, UIColor.gray, UIColor.magenta, UIColor.cyan, UIColor.brown]
         
         for course in courses{
             let plane = PlaneNode(color: colorArray.randomElement()!, position: SCNVector3(0,0,0))
             let planeNode = plane.CreatePlaneNode()
-            planeNode.addChildNode(TextNode(text: course.name!, position: SCNVector3(0.35,1.7,0) , font: UIFont.init(name: "Futura", size: 14)!).CreatetextNode())
-            guard let grade = course.enrollments![0].computed_current_grade else{return}
-            planeNode.addChildNode(TextNode(text: grade, position: SCNVector3(-1, -0.5, 0), font: UIFont.init(name: "Marker Felt", size: 49)!).CreatetextNode())
+            planeNode.addChildNode(TextNode(text: course.name!, position: SCNVector3(0.35,1.7,0) , font: UIFont(name: "Futura", size: 14)!).CreatetextNode())
+            var grade = course.enrollments![0].computed_current_grade
+            if grade == nil {
+                grade = "!"
+            }
+            planeNode.addChildNode(TextNode(text: grade!, position: SCNVector3(-1, -0.288, 0), font: UIFont(name: "Marker Felt", size: 49)!).CreatetextNode())
+            var percentage = course.enrollments![0].computed_current_score
+            if percentage == nil {
+                percentage = 0.00
+            }
+            planeNode.addChildNode(TextNode(text: String(percentage!), position: SCNVector3(-0.812, 1.629, 0), font: UIFont(name: "Marker Felt", size: 21)!).CreatetextNode())
             container.addChildNode(planeNode)
         }
-        
         RunPostitoningAlgorithmForPlanes(array: container.childNodes)
         node.addChildNode(container)
     }
@@ -101,6 +108,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     
+    //Changes text of node that is passed in
     func ChangeTextNode(node : SCNNode, text: String, container: SCNNode, type: String){
         node.removeFromParentNode()
          let nodeGeometry = node.geometry as! SCNText

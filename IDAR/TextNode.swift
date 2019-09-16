@@ -24,10 +24,8 @@ let font : UIFont
     func CreatetextNode() -> SCNNode{
         let textNode = SCNNode()
         let textGeometry = SCNText(string: text, extrusionDepth: 0.2)
-        let materials = SCNMaterial()
-        materials.diffuse.contents = font
-        
-        textGeometry.materials = [materials]
+        textGeometry.font =  font
+        textGeometry.extrusionDepth = 5
         textNode.geometry = textGeometry
         textNode.position = position
         textNode.scale = SCNVector3(0.03, 0.03, 0.03)
