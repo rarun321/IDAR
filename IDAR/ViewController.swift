@@ -16,7 +16,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
     
-    var courses = [Element]()
+    var courses = [CourseInfo]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +32,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Set the scene to the view
         sceneView.scene = scene
         
-        self.GetAPIResponse()
+        self.GetAPIResponseForGrades()
+        self.GetAPIResponseForTODO()
         
         //self.AddCGRectangle()
     }
@@ -69,12 +70,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             planeNode.addChildNode(TextNode(text: course.name!, position: SCNVector3(0.35,1.7,0) , font: UIFont(name: "Futura", size: 14)!).CreatetextNode())
             var grade = course.enrollments![0].computed_current_grade
             if grade == nil {
-                grade = "!"
+                grade = "A+"
             }
             planeNode.addChildNode(TextNode(text: grade!, position: SCNVector3(-1, -0.288, 0), font: UIFont(name: "Marker Felt", size: 49)!).CreatetextNode())
             var percentage = course.enrollments![0].computed_current_score
             if percentage == nil {
-                percentage = 0.00
+                percentage = 100.0
             }
             planeNode.addChildNode(TextNode(text: String(percentage!), position: SCNVector3(-0.812, 1.629, 0), font: UIFont(name: "Marker Felt", size: 21)!).CreatetextNode())
             container.addChildNode(planeNode)
@@ -126,32 +127,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
        container.addChildNode(node)
     }
     
-    func AddAction(node : SCNNode){
-        let action = SCNAction.repeat(SCNAction.rotate(by: 10, around: SCNVector3(1,0,0), duration: 5.0), count: 10)
-        node.runAction(action)
-    }
-    
-    func AddCGRectangle(){
-        let rect = CGRect(x: 100, y:150, width: 200, height: 75)
-        let myView = UIView(frame: rect)
-        myView.backgroundColor = UIColor.gray.withAlphaComponent(0.5)
-        self.view.addSubview(myView)
-    }
-    
-    func CropSnapShot() -> UIImage{
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: 200, height: 75), false, 0);
-        self.view.drawHierarchy(in: CGRect(x: -100, y: -150, width: view.bounds.size.width, height: view.bounds.size.height), afterScreenUpdates: true)
-        let image:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-        return image
-    }
-    
-    func GetAPIResponse(){
+    func GetAPIResponseForGrades(){
         let canvasAPIUrl = URL(string: "https://asu.instructure.com/api/v1/courses?include[]=total_scores&access_token=7236~Xu8jfB2SU7m1dXyfoJIsCWcUBQmeTxDXWxzzEJhlZIB69phVPse5v3oMQAockxCR")!
         let task = URLSession.shared.dataTask(with: canvasAPIUrl) {(data,response,error) in
-        
             guard let dataFromAPI = data else {return}
             if error == nil{
-              guard let resp = try? JSONDecoder().decode([Element].self, from: dataFromAPI) else{return}
+              guard let resp = try? JSONDecoder().decode([CourseInfo].self, from: dataFromAPI) else{return}
                 for var course in resp {
                     if course.name?.contains("(2019 Fall)") == true {
                        guard let formattedName = course.name?.components(separatedBy: ":") else {return}
@@ -165,6 +146,20 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             }
         }
         task.resume()
+    }
+    
+    func GetAPIResponseForTODO(){
+        let canvasAPI = URL(string:"https://asu.instructure.com/api/v1/users/self/todo?include[]=total_scores&access_token=7236~Xu8jfB2SU7m1dXyfoJIsCWcUBQmeTxDXWxzzEJhlZIB69phVPse5v3oMQAockxCR")!
+        let task = URLSession.shared.dataTask(with: canvasAPI) {(data,response,error) in
+            guard let dataFromAPI = data else {return}
+            if error == nil{
+                 guard let json = try? JSONDecoder().decode([TODOInfo].self, from: dataFromAPI) else {return}
+            }
+            else{
+                print("Error")
+            }
+        }
+        task.resume();
     }
 }
 

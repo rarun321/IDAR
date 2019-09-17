@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Element: Decodable {
+struct CourseInfo: Decodable {
     let id: Int?
     var name: String?
     let accountID: Int?
