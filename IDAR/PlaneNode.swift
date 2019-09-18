@@ -15,13 +15,15 @@ class PlaneNode{
     let width : CGFloat
     let height : CGFloat
     let cornerRadius : CGFloat
+    let opacity : CGFloat
   
-    init(color : UIColor, position : SCNVector3, width : CGFloat, height : CGFloat, cornerRadius : CGFloat) {
+    init(color : UIColor, position : SCNVector3, width : CGFloat, height : CGFloat, cornerRadius : CGFloat, opacity : CGFloat) {
         self.color = color
         self.position = position
         self.width = width
         self.height = height
         self.cornerRadius = cornerRadius
+        self.opacity = opacity
     }
     
     func CreatePlaneNode()-> SCNNode{
@@ -35,6 +37,7 @@ class PlaneNode{
         planeNode.eulerAngles = SCNVector3(-89.5,0,0)
         planeNode.scale = SCNVector3(1,1,1)
         planeNode.position = position
+        planeNode.opacity = opacity
         return planeNode
     }
 }

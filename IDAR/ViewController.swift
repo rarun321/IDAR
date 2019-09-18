@@ -60,7 +60,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let colorArray = [UIColor.blue, UIColor.red, UIColor.orange, UIColor.green, UIColor.gray, UIColor.magenta, UIColor.cyan, UIColor.brown]
         
         for course in courses{
-            let plane = PlaneNode(color: colorArray.randomElement()!, position: SCNVector3(0,0,0), width : 2 , height : 3.6, cornerRadius: 0.2)
+            let plane = PlaneNode(color: colorArray.randomElement()!, position: SCNVector3(0,0,0), width : 2 , height : 3.6, cornerRadius: 0.2, opacity: -1)
             let planeNode = plane.CreatePlaneNode()
             planeNode.addChildNode(TextNode(text: course.name!, position: SCNVector3(0.35,1.7,0) , font: UIFont(name: "Futura", size: 14)!).CreatetextNode())
             var grade = course.enrollments![0].computed_current_grade
@@ -84,7 +84,19 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 //       container.addChildNode(TODOPlaneNode);
         
         
-        node.addChildNode(container)
+        // Adds a chain effect for animations - need to find a better way to do this
+       container.childNodes[1].runAction(SCNAction.fadeIn(duration: 0.5), completionHandler: {() in
+            container.childNodes[2].runAction(SCNAction.fadeIn(duration: 0.5), completionHandler: {() in
+                container.childNodes[3].runAction(SCNAction.fadeIn(duration: 0.5), completionHandler: { () in
+                    container.childNodes[4].runAction(SCNAction.fadeIn(duration: 0.5), completionHandler: {() in
+                        container.childNodes[5].runAction(SCNAction.fadeIn(duration: 0.5), completionHandler: {() in
+                            container.childNodes[6].runAction(SCNAction.fadeIn(duration: 0.5))
+                        })
+                    })
+                })
+            })
+       })
+     node.addChildNode(container)
     }
     
     // Positions planes 2x2 grid
@@ -104,15 +116,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                             position = SCNVector3(baseX + -(Double(count - 1) * 2.5), baseY, baseZ)
                             xHolder = baseX + -(Double(count-1) * 2.5)
                             count += 1
-                       }
-                       else{
-                           position = SCNVector3(xHolder, baseY, baseZ + 4)
-                       }
-                          node.position = position
-                          subjectCount += 1
-                      }
-            }
+                }
+               else{
+                   position = SCNVector3(xHolder, baseY, baseZ + 4)
+               }
+                  node.position = position
+                
+                  subjectCount += 1
+              }
+        }
     }
+    
     
     //Changes text of node that is passed in
     func ChangeTextNode(node : SCNNode, text: String, container: SCNNode, type: String){
