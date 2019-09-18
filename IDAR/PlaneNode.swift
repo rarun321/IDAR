@@ -12,16 +12,22 @@ import ARKit
 class PlaneNode{
     let color : UIColor
     let position : SCNVector3
+    let width : CGFloat
+    let height : CGFloat
+    let cornerRadius : CGFloat
   
-    init(color : UIColor, position : SCNVector3) {
+    init(color : UIColor, position : SCNVector3, width : CGFloat, height : CGFloat, cornerRadius : CGFloat) {
         self.color = color
         self.position = position
+        self.width = width
+        self.height = height
+        self.cornerRadius = cornerRadius
     }
     
     func CreatePlaneNode()-> SCNNode{
         let planeNode = SCNNode()
-        let plane = SCNPlane(width: 2 , height: 3.6)
-        plane.cornerRadius = 0.2
+        let plane = SCNPlane(width: width , height: height)
+        plane.cornerRadius = cornerRadius
         let material = SCNMaterial()
         material.diffuse.contents = color
         plane.materials = [material]

@@ -23,9 +23,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Set the view's delegate
         sceneView.delegate = self
         
-        // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
-        
         // Create a new scene
         let scene = SCNScene(named: "art.scnassets/Scene.scn")!
         
@@ -34,8 +31,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         self.GetAPIResponseForGrades()
         self.GetAPIResponseForTODO()
-        
-        //self.AddCGRectangle()
     }
     
     //Sets configuartion for tracking
@@ -65,7 +60,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let colorArray = [UIColor.blue, UIColor.red, UIColor.orange, UIColor.green, UIColor.gray, UIColor.magenta, UIColor.cyan, UIColor.brown]
         
         for course in courses{
-            let plane = PlaneNode(color: colorArray.randomElement()!, position: SCNVector3(0,0,0))
+            let plane = PlaneNode(color: colorArray.randomElement()!, position: SCNVector3(0,0,0), width : 2 , height : 3.6, cornerRadius: 0.2)
             let planeNode = plane.CreatePlaneNode()
             planeNode.addChildNode(TextNode(text: course.name!, position: SCNVector3(0.35,1.7,0) , font: UIFont(name: "Futura", size: 14)!).CreatetextNode())
             var grade = course.enrollments![0].computed_current_grade
@@ -80,7 +75,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             planeNode.addChildNode(TextNode(text: String(percentage!), position: SCNVector3(-0.812, 1.629, 0), font: UIFont(name: "Marker Felt", size: 21)!).CreatetextNode())
             container.addChildNode(planeNode)
         }
+        
         RunPostitoningAlgorithmForPlanes(array: container.childNodes)
+        
+//        //Adds TODOPlane to Container
+//        let TODOplane = PlaneNode(color: UIColor.black, position: SCNVector3(-5.8, -1.45, 3.25), width : 4.5 , height : 4.5, cornerRadius: 0.5);
+//        let TODOPlaneNode = TODOplane.CreatePlaneNode();
+//       container.addChildNode(TODOPlaneNode);
+        
+        
         node.addChildNode(container)
     }
     
@@ -96,17 +99,19 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         var xHolder = 0.0
         
         for node in array {
-            if subjectCount % 2 == 0{
-              position = SCNVector3(baseX + -(Double(count - 1) * 2.5), baseY, baseZ)
-              xHolder = baseX + -(Double(count-1) * 2.5)
-              count += 1
-         }
-         else{
-             position = SCNVector3(xHolder, baseY, baseZ + 4)
-         }
-            node.position = position
-            subjectCount += 1
-        }
+            if node.name != "TODO" {
+                if subjectCount % 2 == 0{
+                            position = SCNVector3(baseX + -(Double(count - 1) * 2.5), baseY, baseZ)
+                            xHolder = baseX + -(Double(count-1) * 2.5)
+                            count += 1
+                       }
+                       else{
+                           position = SCNVector3(xHolder, baseY, baseZ + 4)
+                       }
+                          node.position = position
+                          subjectCount += 1
+                      }
+            }
     }
     
     //Changes text of node that is passed in
