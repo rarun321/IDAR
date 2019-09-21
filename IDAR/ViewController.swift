@@ -89,9 +89,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             container.childNodes[2].runAction(SCNAction.fadeIn(duration: 0.5), completionHandler: {() in
                 container.childNodes[3].runAction(SCNAction.fadeIn(duration: 0.5), completionHandler: { () in
                     container.childNodes[4].runAction(SCNAction.fadeIn(duration: 0.5), completionHandler: {() in
-                        container.childNodes[5].runAction(SCNAction.fadeIn(duration: 0.5), completionHandler: {() in
-                            container.childNodes[6].runAction(SCNAction.fadeIn(duration: 0.5))
-                        })
                     })
                 })
             })
